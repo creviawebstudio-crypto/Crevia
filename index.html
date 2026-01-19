@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CREVIA | Digitální identita, která prodává</title>
+  
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light"
 
   <!-- Fonty -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,600,700&display=swap" rel="stylesheet">
@@ -28,6 +31,7 @@
       --border:rgba(255,255,255,.08);
       --glow:rgba(79,172,254,.3);
     }
+    
 
     *{margin:0;padding:0;box-sizing:border-box}
     body{
@@ -220,6 +224,51 @@
       .logo-img{height:24px}
       .logo-text{font-size:1.05rem;letter-spacing:1px}
     }
+    
+:root, html, body { color-scheme: light; }
+
+/* Pojistka proti auto-dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-dark: #1E2337;
+    --bg-darker: #121520;
+    --coral: #FF7A5C;
+    --magenta: #C850C0;
+    --sky: #4FACFE;
+    --white: #ffffff;
+    --text-gray: #B0B5C2;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --glow: rgba(79, 172, 254, 0.3);
+  }
+  body { background-color: var(--bg-dark); color: var(--white); }
+  img, video, canvas { filter: none !important; }
+}
+    
+/* Specifické úpravy e‑mail tlačítka */
+.btn-email {
+  /* Desktop default – nic zásadního neměníme */
+  max-width: 100%;
+}
+
+/* Mobilní úpravy – NEPŘESAHOVAT, MŮŽE SE ZALOMIT, PLNÁ ŠÍŘKA */
+@media (max-width: 900px) {
+  .btn-email {
+    display: block;           /* aby šlo použít 100% šířku přirozeně */
+    width: 100%;
+    max-width: 480px;         /* volitelné – hezké omezení v rámci kontejneru */
+    margin: 0 auto;           /* vycentrovat */
+    text-align: center;
+    white-space: normal;      /* umožní zalomení */
+    word-break: break-word;   /* kdyby prohlížeč nechtěl zalomit na @/. */
+    overflow-wrap: anywhere;  /* moderní – dovolí zalomení kdekoliv bezpečně */
+    padding: 12px 16px;       /* menší padding, menší „balón“ */
+    font-size: 1rem;          /* trochu menší text */
+    line-height: 1.35;
+  }
+}
+
+
   </style>
 </head>
 <body>
@@ -537,7 +586,7 @@
         <p style="max-width: 600px; margin: 0 auto 50px; color: var(--text-gray);">
           Nezávazná konzultace zdarma. Napište nám a zjistěte, jak může nový web nastartovat váš byznys.
         </p>
-        <a href="mailto:crevia.webstudio@gmail.com" class="btn-main" style="padding: 22px 48px; font-size: 1.05rem;">crevia.webstudio@gmail.com</a>
+        <a href="mailto:crevia.webstudio@gmail.com" class="btn-main btn-email">crevia.webstudio@gmail.com</a>
       </div>
     </div>
 
@@ -680,6 +729,7 @@
   </script>
 </body>
 </html>
+
 
 
 
