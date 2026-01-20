@@ -5,9 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CREVIA | Digitální identita, která prodává</title>
-  
-<meta name="color-scheme" content="light only">
-<meta name="supported-color-schemes" content="light"
+
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light">
 
   <!-- Fonty -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,600,700&display=swap" rel="stylesheet">
@@ -31,7 +31,6 @@
       --border:rgba(255,255,255,.08);
       --glow:rgba(79,172,254,.3);
     }
-    
 
     *{margin:0;padding:0;box-sizing:border-box}
     body{
@@ -224,50 +223,404 @@
       .logo-img{height:24px}
       .logo-text{font-size:1.05rem;letter-spacing:1px}
     }
+
+    :root, html, body { color-scheme: light; }
+
+    /* Pojistka proti auto-dark */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-dark: #1E2337;
+        --bg-darker: #121520;
+        --coral: #FF7A5C;
+        --magenta: #C850C0;
+        --sky: #4FACFE;
+        --white: #ffffff;
+        --text-gray: #B0B5C2;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.08);
+        --glow: rgba(79, 172, 254, 0.3);
+      }
+      body { background-color: var(--bg-dark); color: var(--white); }
+      img, video, canvas { filter: none !important; }
+    }
+
+    /* Specifické úpravy e‑mail tlačítka */
+    .btn-email {
+      /* Desktop default – nic zásadního neměníme */
+      max-width: 100%;
+    }
+
+    /* Mobilní úpravy – NEPŘESAHOVAT, MŮŽE SE ZALOMIT, PLNÁ ŠÍŘKA */
+    @media (max-width: 900px) {
+      .btn-email {
+        display: block;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        text-align: center;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        padding: 12px 16px;
+        font-size: 1rem;
+        line-height: 1.35;
+      }
+    }
+
+    /* ====== VYLEPŠENÍ CENÍKU (badge, ceny, countdown) ====== */
+    .badge-sale{
+      position:absolute;
+      top:-15px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:6px 18px;
+      border-radius:20px;
+      font-size:.8rem;
+      font-weight:700;
+      color:#fff;
+      animation:pulse 1.8s infinite ease-in-out;
+      box-shadow:0 0 12px rgba(255,122,92,0.45);
+      border:1px solid rgba(255,255,255,.25);
+      white-space:nowrap;
+    }
+    .badge-reco{
+      position:absolute;
+      top:-48px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:6px 16px;
+      border-radius:20px;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.5px;
+      background:var(--coral);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    @keyframes pulse{
+      0%{ transform:translateX(-50%) scale(1); opacity:1 }
+      50%{ transform:translateX(-50%) scale(1.12); opacity:.9 }
+      100%{ transform:translateX(-50%) scale(1); opacity:1 }
+    }
+    .price-old{
+      color:var(--text-gray);
+      text-decoration:line-through;
+      font-size:1rem;
+      opacity:.9;
+    }
+    .price-new{
+      font-size:3rem;
+      font-weight:800;
+      line-height:1.1;
+      background:linear-gradient(90deg,var(--sky),var(--magenta));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow:0 0 20px rgba(79,172,254,.15);
+    }
+    .pricing-note{
+      text-align:center;
+      color:var(--coral);
+      font-weight:700;
+      margin-bottom:10px;
+      font-size:1.05rem;
+    }
+    .pricing-subnote{
+      text-align:center;
+      color:var(--text-gray);
+      margin-bottom:60px;
+    }
+    .countdown{
+      color:var(--sky);
+      font-weight:800;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(79,172,254,.08);
+      border:1px solid rgba(79,172,254,.25);
+      display:inline-block;
+      min-width:220px;
+    }
     
-:root, html, body { color-scheme: light; }
+/* ===== PRICING – FIXED BADGES & PERFECT BORDER ===== */
 
-/* Pojistka proti auto-dark */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-dark: #1E2337;
-    --bg-darker: #121520;
-    --coral: #FF7A5C;
-    --magenta: #C850C0;
-    --sky: #4FACFE;
-    --white: #ffffff;
-    --text-gray: #B0B5C2;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.08);
-    --glow: rgba(79, 172, 254, 0.3);
-  }
-  body { background-color: var(--bg-dark); color: var(--white); }
-  img, video, canvas { filter: none !important; }
-}
-    
-/* Specifické úpravy e‑mail tlačítka */
-.btn-email {
-  /* Desktop default – nic zásadního neměníme */
-  max-width: 100%;
+/* Karta – sjednocená třída pro ceník (může nahradit .philo-card v pricingu) */
+.pricing-card{
+  position: relative;
+  border-radius: 22px;
+  padding: 28px 28px 30px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  isolation: isolate; /* pro maskování okraje */
 }
 
-/* Mobilní úpravy – NEPŘESAHOVAT, MŮŽE SE ZALOMIT, PLNÁ ŠÍŘKA */
-@media (max-width: 900px) {
-  .btn-email {
-    display: block;           /* aby šlo použít 100% šířku přirozeně */
-    width: 100%;
-    max-width: 480px;         /* volitelné – hezké omezení v rámci kontejneru */
-    margin: 0 auto;           /* vycentrovat */
-    text-align: center;
-    white-space: normal;      /* umožní zalomení */
-    word-break: break-word;   /* kdyby prohlížeč nechtěl zalomit na @/. */
-    overflow-wrap: anywhere;  /* moderní – dovolí zalomení kdekoliv bezpečně */
-    padding: 12px 16px;       /* menší padding, menší „balón“ */
-    font-size: 1rem;          /* trochu menší text */
-    line-height: 1.35;
-  }
+/* Perfektní gradientový rámeček bez „sedlání“ hran */
+.pricing-card::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius: 22px;
+  padding:1px;                /* tloušťka rámečku */
+  background: linear-gradient(180deg, var(--sky), var(--magenta), var(--coral));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;    /* FF */
+  pointer-events:none;
+  opacity:.65;
 }
 
+/* Zdůraznění „DOPORUČUJEME“ karty */
+.pricing-card.recommended{
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 0 40px rgba(255, 122, 92, .20);
+}
+
+/* Hlavička karty – prostor pro chipsy (badge) v jedné řádce */
+.card-header{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:-10px 0 8px; /* jemné vyrovnání s horním paddingem karty */
+  flex-wrap:wrap;
+}
+
+/* Chip (badge) – univerzální styl, už žádné absolutní pozicování */
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius: 999px;
+  font-size:.78rem;
+  font-weight:800;
+  letter-spacing:.4px;
+  border:1px solid rgba(255,255,255,.25);
+  white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+}
+.chip--sale{ background: rgba(79,172,254,.18); color: var(--sky); }
+.chip--reco{ background: var(--coral); color:#fff; }
+
+/* Jemná pulzace pouze u sale chipu (méně výrazná) */
+.chip--sale{ animation: chipPulse 2.2s ease-in-out infinite; }
+@keyframes chipPulse{
+  0%,100%{ transform: translateZ(0) scale(1); opacity:1 }
+  50%{ transform: translateZ(0) scale(1.06); opacity:.95 }
+}
+
+/* Titulek a ceny */
+.plan-title{
+  margin-top:6px;
+  font-size:1.1rem;
+  color:var(--text-gray);
+}
+.price-wrap{ margin: 18px 0 6px; }
+.price-old{
+  color:var(--text-gray);
+  text-decoration: line-through;
+  font-size: .98rem;
+  opacity:.9;
+}
+.price-new{
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+  font-weight: 800;
+  line-height:1.1;
+  background: linear-gradient(90deg,var(--sky),var(--magenta));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 20px rgba(79,172,254,.15);
+}
+.price-unit{ font-size:1rem; color:var(--text-gray); }
+
+/* Seznam benefitů */
+.plan-list{ 
+  text-align:left; 
+  list-style:none; 
+  color:var(--text-gray);
+  margin: 16px 0 32px;
+  display:grid; gap:8px;
+}
+
+/* Tlačítko uvnitř karty – sjednocení */
+.plan-cta.btn-main{
+  text-transform:none;
+  letter-spacing:.2px;
+}
+
+/* Drobné responsivní doladění */
+@media (max-width: 900px){
+  .pricing-card{ padding:22px 18px 24px; border-radius:18px; }
+  .pricing-card::before{ border-radius:18px; }
+  .card-header{ margin:-6px 0 6px; }
+}
+
+/* GRID pro pricing */
+.pricing-grid{
+  display:grid;
+  gap:30px;
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
+}
+
+/* Karta */
+.pricing-card{
+  position:relative;
+  padding:30px;
+  border-radius:22px;
+  background:var(--card-bg);
+  backdrop-filter:blur(14px);
+  transition:
+    transform .35s cubic-bezier(.2,.8,.2,1),
+    box-shadow .35s cubic-bezier(.2,.8,.2,1),
+    background .35s ease;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),
+             0 8px 28px rgba(0,0,0,.25);
+  will-change:transform, box-shadow;
+  overflow:hidden;
+}
+
+/* Okraj – gradient + mask */
+.pricing-card::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:22px;
+  padding:1px;
+  background:linear-gradient(135deg,var(--sky),var(--magenta),var(--coral),var(--sky));
+  background-size:300% 300%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.65;
+  pointer-events:none;
+}
+
+/* Hover efekt */
+.pricing-card:hover{
+  transform:translateY(-8px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.1),
+    0 16px 44px rgba(200,80,192,.25),
+    0 28px 70px rgba(79,172,254,.18);
+}
+.pricing-card:hover::before{
+  animation:borderFlow 3s ease infinite;
+  opacity:1;
+}
+
+@keyframes borderFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* Ribbon */
+.ribbon-left,
+.ribbon-right{
+  position:absolute;
+  top:0;
+  width:110px;
+  height:110px;
+  background:linear-gradient(145deg,rgba(255,255,255,.1),transparent);
+  z-index:5;
+  opacity:.25;
+}
+.ribbon-left{ left:0; transform:translate(-40%,-40%) rotate(-45deg); }
+.ribbon-right{ right:0; transform:translate(40%,-40%) rotate(45deg); }
+
+/* Badge chips */
+.card-header{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:10px;
+}
+.chip{
+  display:inline-flex;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:800;
+  border:1px solid rgba(255,255,255,.35);
+  white-space:nowrap;
+}
+.chip--sale{
+  background:linear-gradient(90deg,var(--sky),var(--magenta));
+  color:#fff;
+  box-shadow:0 6px 18px rgba(79,172,254,.35);
+  animation:chipPulse 2.6s ease infinite;
+}
+@keyframes chipPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07);}
+}
+.chip--reco{
+  background:linear-gradient(90deg,var(--coral),#ff9a7a);
+  color:#fff;
+}
+
+/* SHIMMER efekty */
+.shimmer,
+.shimmer-strong,
+.shimmer-light{
+  position:relative;
+  overflow:hidden;
+}
+.shimmer::after,
+.shimmer-strong::after,
+.shimmer-light::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.4) 45%,transparent 70%);
+  transform:translateX(-120%);
+  animation:shimmer 4s ease-in-out infinite;
+  pointer-events:none;
+}
+.shimmer-strong::after{ animation-duration:3.2s; opacity:.9; }
+.shimmer-light::after{ animation-duration:5s; opacity:.3; }
+
+@keyframes shimmer{
+  0%{transform:translateX(-120%)}
+  100%{transform:translateX(120%)}
+}
+
+/* Ikony ✓ jemně ožívají na hover */
+.plan-list li{
+  transform:translateX(0);
+  transition:transform .25s ease;
+}
+.pricing-card:hover .plan-list li{
+  transform:translateX(4px);
+}
+
+/* Tilt mikroefekt */
+.pricing-card.tilt-active{
+  transform:translateY(-8px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+}
+
+.plan-cta {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  padding: 14px 18px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sky), var(--magenta));
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: .25s ease;
+  box-shadow: 0 6px 20px rgba(79,172,254,.25);
+}
+
+.plan-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(79,172,254,.35);
+}
+``
 
   </style>
 </head>
@@ -363,7 +716,7 @@
           <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
           <h3 style="color: var(--sky); margin-bottom: 10px;">Co děláme jinak my:</h3>
           <p style="font-size: 0.95rem;">
-            Stavíme na míru. Optimalizujeme pro rychlost. Používáme psychologii barev (Midnight Blue pro důvěru, Coral pro akci).
+            Stavíme na míru. Optimalizujeme pro rychlost. Používáme psychologii barev.
           </p>
         </div>
       </div>
@@ -415,7 +768,7 @@
           </div>
         </div>
 
-        <!-- 03: Branding & Identita (NOVÉ) -->
+        <!-- 03: Branding & Identita -->
         <div class="service-block hover-trigger">
           <div class="service-content">
             <span class="service-num">03</span>
@@ -435,7 +788,7 @@
           </div>
         </div>
 
-        <!-- 04: AI & Automatizace – Připravujeme (PŘESUNUTO) -->
+        <!-- 04: AI & Automatizace – Připravujeme -->
         <div class="service-block reverse hover-trigger coming-soon">
           <div class="badge-soon">PŘIPRAVUJEME</div>
           <div class="service-content">
@@ -528,54 +881,109 @@
     </div>
   </section>
 
-  <!-- Ceník -->
-  <section id="pricing" style="padding: 150px 0;">
-    <div class="container">
-      <h2 style="text-align: center; margin-bottom: 20px;">Transparentní investice</h2>
-      <p style="text-align: center; color: var(--text-gray); margin-bottom: 80px;">Žádné skryté poplatky. Platíte za kvalitu.</p>
+  <!-- Ceník (slevy + animace + countdown) -->
+  
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-        <div class="philo-card hover-trigger" style="text-align: center;">
-          <h3 style="color: var(--text-gray); font-size: 1.2rem;">Start</h3>
-          <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">6 000+ <span style="font-size: 1rem; color: var(--text-gray);">Kč</span></div>
-          <p style="margin-bottom: 30px;">Pro freelancery a malé projekty.</p>
-          <ul style="text-align: left; list-style: none; color: var(--text-gray); margin-bottom: 40px;">
-            <li>✓ One‑page design</li>
-            <li>✓ Kontaktní formulář</li>
-            <li>✓ Responzivita</li>
-          </ul>
-          <a href="#contact" class="btn-main" style="background: transparent; border: 1px solid var(--white);">Poptávka</a>
+<section id="pricing" class="pricing-section" style="padding: 150px 0;">
+  <div class="container">
+    <h2 style="text-align: center; margin-bottom: 20px;">Transparentní investice</h2>
+
+    <p class="pricing-note">
+      Sleva platí do konce dubna — 
+      <span id="countdown" class="countdown">počítám…</span>
+    </p>
+    <p class="pricing-subnote">
+      Žádné skryté poplatky. Platíte za kvalitu.
+    </p>
+
+    <div class="pricing-grid">
+
+      <!-- START -->
+      <div class="pricing-card">
+        <div class="ribbon-left"></div> <!-- diagonální ribbon -->
+        <div class="card-header">
+          <span class="chip chip--sale">SLEVA –4&nbsp;000&nbsp;Kč</span>
         </div>
 
-        <div class="philo-card hover-trigger" style="text-align: center; border-color: var(--coral); box-shadow: 0 0 30px rgba(255, 122, 92, 0.1); position: relative;">
-          <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--coral); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">DOPORUČUJEME</div>
-          <h3 style="color: var(--white); font-size: 1.2rem;">Business</h3>
-          <div style="font-size: 3rem; font-weight: 700; margin: 20px 0; color: var(--coral);">9 000+ <span style="font-size: 1rem; color: var(--text-gray);">Kč</span></div>
-          <p style="margin-bottom: 30px;">Pro firmy, které chtějí růst.</p>
-          <ul style="text-align: left; list-style: none; color: var(--text-gray); margin-bottom: 40px;">
-            <li>✓ Více podstránek</li>
-            <li>✓ Pokročilé animace</li>
-            <li>✓ SEO optimalizace</li>
-            <li>✓ Google Analytics</li>
-          </ul>
-          <a href="#contact" class="btn-main">Chci tento web</a>
+        <h3 class="plan-title">Start</h3>
+
+        <div class="price-wrap shimmer">
+          <div class="price-old">10&nbsp;000&nbsp;Kč</div>
+          <div class="price-new">6&nbsp;000 <span class="price-unit">Kč</span></div>
         </div>
 
-        <div class="philo-card hover-trigger" style="text-align: center;">
-          <h3 style="color: var(--text-gray); font-size: 1.2rem;">Premium</h3>
-          <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">Na míru</div>
-          <p style="margin-bottom: 30px;">Pro náročné klienty</p>
-          <ul style="text-align: left; list-style: none; color: var(--text-gray); margin-bottom: 40px;">
-            <li>✓ Komplexní řešení</li>
-            <li>✓ 3D prvky / WebGL</li>
-            <li>✓ Integrace systémů</li>
-            <li>✓ Barnding</li>
-          </ul>
-          <a href="#contact" class="btn-main" style="background: transparent; border: 1px solid var(--white);">Konzultace</a>
-        </div>
+        <p class="plan-desc">Pro freelancery a malé projekty.</p>
+
+        <ul class="plan-list">
+          <li>✓ One‑page design</li>
+          <li>✓ Kontaktní formulář</li>
+          <li>✓ Responzivita</li>
+        </ul>
+
+        
+        <a href="#contact" class="btn-main plan-cta">Poptávka</a>
+
+
       </div>
+
+
+      <!-- BUSINESS -->
+      <div class="pricing-card recommended">
+        <div class="ribbon-right"></div>
+        <div class="card-header">
+          <span class="chip chip--reco">Doporučujeme</span>
+          <span class="chip chip--sale">SLEVA –7&nbsp;000&nbsp;Kč</span>
+        </div>
+
+        <h3 class="plan-title" style="color:#fff;">Business</h3>
+
+        <div class="price-wrap shimmer-strong">
+          <div class="price-old">16&nbsp;000&nbsp;Kč</div>
+          <div class="price-new coral-gradient">
+            9&nbsp;000 <span class="price-unit">Kč</span>
+          </div>
+        </div>
+
+        <p class="plan-desc">Pro firmy, které chtějí růst.</p>
+
+        <ul class="plan-list">
+          <li>✓ Více podstránek</li>
+          <li>✓ Pokročilé animace</li>
+          <li>✓ SEO optimalizace</li>
+          <li>✓ Google Analytics</li>
+        </ul>
+
+        <a href="#contact" class="btn-main plan-cta">Chci tento web</a>
+      </div>
+
+
+      <!-- PREMIUM -->
+      <div class="pricing-card">
+        <div class="card-header"></div>
+
+        <h3 class="plan-title">Premium</h3>
+
+        <div class="price-wrap shimmer-light">
+          <div class="price-new grey-gradient">Na míru</div>
+        </div>
+
+        <p class="plan-desc">Pro náročné klienty</p>
+
+        <ul class="plan-list">
+          <li>✓ Komplexní řešení</li>
+          <li>✓ 3D prvky / WebGL</li>
+          <li>✓ Integrace systémů</li>
+          <li>✓ Branding</li>
+        </ul>
+
+       <a href="#contact" class="btn-main plan-cta">Konzultace</a>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
+
 
   <!-- Footer / Kontakt -->
   <footer id="contact">
@@ -725,12 +1133,80 @@
           });
         });
       }
+
+      /* ===== Countdown do 30. 4. 2026 23:59:59 (lokální čas) ===== */
+      const countdownEl = document.getElementById('countdown');
+      if (countdownEl) {
+        const end = new Date('2026-04-30T23:59:59').getTime(); // lokální čas
+        function pad(n){ return String(n).padStart(2,'0'); }
+        function tick() {
+          const now = Date.now();
+          const diff = Math.max(0, end - now);
+
+          if (diff <= 0) {
+            countdownEl.textContent = 'Akce skončila';
+            clearInterval(timer);
+            return;
+          }
+
+          const d = Math.floor(diff / (1000*60*60*24));
+          const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+          const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+          const s = Math.floor((diff % (1000*60)) / 1000);
+
+          // Formát: 12 dnů 05:23:45
+          countdownEl.textContent = `${d} dnů ${pad(h)}:${pad(m)}:${pad(s)}`;
+        }
+        tick();
+        const timer = setInterval(tick, 1000);
+      }
     });
   </script>
+  
+<script>
+// ==== Tilt efekt ====
+document.querySelectorAll('.pricing-card').forEach(card => {
+  const maxTilt = 7;
+
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - (rect.left + rect.width/2);
+    const y = e.clientY - (rect.top + rect.height/2);
+    const rx = (y / rect.height) * maxTilt;
+    const ry = -(x / rect.width) * maxTilt;
+    card.style.setProperty('--rx', rx + 'deg');
+    card.style.setProperty('--ry', ry + 'deg');
+    card.classList.add('tilt-active');
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.classList.remove('tilt-active');
+    card.style.setProperty('--rx', '0deg');
+    card.style.setProperty('--ry', '0deg');
+  });
+});
+
+// ==== Countdown ====
+const countdownEl = document.getElementById('countdown');
+if(countdownEl){
+  const target = new Date("2026-04-30T23:59:59").getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = target - now;
+    if(diff <= 0){
+      countdownEl.textContent = "Akce skončila";
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    countdownEl.textContent = `${d} dnů ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick();
+  setInterval(tick,1000);
+}
+</script>
+
 </body>
 </html>
-
-
-
-
-
