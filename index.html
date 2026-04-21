@@ -349,6 +349,99 @@
       .email-cta strong { display: block; font-size: 1.1rem; margin-bottom: 6px; }
       .email-cta span { font-size: 0.9rem; opacity: 0.85; word-break: break-all; }
     }
+    .showcase-container { display: flex; flex-direction: column; gap: 60px; }
+    
+    .project-showcase-item {
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    .project-hero {
+      position: relative;
+      width: 100%;
+      height: 550px; /* Trochu vyšší pro větší wow efekt */
+      background: #000;
+    }
+
+    .project-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7; /* Ztmavení samotného obrázku pro kontrast */
+      transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .project-showcase-item:hover img {
+      transform: scale(1.05);
+      opacity: 0.5;
+    }
+
+    /* Vylepšený overlay - tmavší spodek pro text */
+    .project-overlay-v2 {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 60px;
+    }
+
+    .project-info-v2 { max-width: 600px; }
+
+    .category-tag {
+      display: inline-block;
+      color: var(--coral);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
+    .project-info-v2 h3 {
+      font-size: 3rem;
+      color: #fff;
+      margin-bottom: 15px;
+      font-family: 'Clash Display', sans-serif;
+    }
+
+    .project-info-v2 p {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    /* Tlačítko, které nesplyne */
+    .project-btn-premium {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 35px;
+      background: #fff; /* Bílé pozadí pro maximální kontrast na tmavém */
+      color: #000;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 999px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+    }
+
+    .project-btn-premium:hover {
+      background: var(--coral);
+      color: #fff;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(255, 90, 54, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .project-hero { height: 450px; }
+      .project-overlay-v2 { padding: 30px; }
+      .project-info-v2 h3 { font-size: 2rem; }
+      .project-info-v2 p { font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -560,31 +653,45 @@
 
   <section id="project-showcase" class="section-padding">
     <div class="container">
-      <h2 style="text-align:center; font-size:3rem; margin-bottom:20px;" class="reveal-scroll">Ukázka naší práce</h2>
+      <h2 style="text-align:center; font-size:3.5rem; margin-bottom:20px;" class="reveal-scroll">Portfolio projektů</h2>
       <p style="text-align:center; max-width:680px; margin:0 auto 60px; color:var(--text-gray); font-size: 1.1rem;" class="reveal-scroll">
-        Jeden projekt — tři pohledy. Náhled skutečné webové prezentace tvořené na míru.
+        Podívejte se na ukázky našich prémiových řešení v plné kráse.
       </p>
 
-      <div class="project-hero reveal-scroll">
-        <img src="ukazka1.png" alt="Ukázka projektu" onerror="this.style.display='none'; this.parentElement.style.background='#111'; this.parentElement.style.height='400px';">
-        <div class="project-hero-glow"></div>
-      </div>
+      <div class="showcase-container">
+        
+        <div class="project-showcase-item reveal-scroll">
+          <div class="project-hero">
+            <img src="truh.png" alt="Ukázka Truhlářství" onerror="this.src='https://images.unsplash.com/photo-1581421315159-24690c144c8f?w=1200&q=80';">
+            <div class="project-overlay-v2">
+              <div class="project-info-v2">
+                <span class="category-tag">E-commerce / Řemeslo</span>
+                <h3>Truhlářství</h3>
+                <p>Moderní webová prezentace pro mistra svého oboru. Čistý design, který dává vyniknout struktuře dřeva.</p>
+                <a href="truh.html" target="_blank" class="project-btn-premium">Prohlédnout realizaci</a>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div class="project-grid reveal-scroll">
-        <div class="project-thumb spotlight-card"><img src="ukazka4.png" alt="Screenshot" onerror="this.parentElement.style.display='none'"></div>
-        <div class="project-thumb spotlight-card"><img src="ukazka2.png" alt="Screenshot" onerror="this.parentElement.style.display='none'"></div>
-        <div class="project-thumb spotlight-card"><img src="ukazka3.png" alt="Screenshot" onerror="this.parentElement.style.display='none'"></div>
-      </div>
-    </div>
+        <div class="project-showcase-item reveal-scroll">
+          <div class="project-hero">
+            <img src="zoo.png" alt="Ukázka NovaWild ZOO" onerror="this.src='https://images.unsplash.com/photo-1544979590-37e9b47eb705?w=1200&q=80';">
+            <div class="project-overlay-v2">
+              <div class="project-info-v2">
+                <span class="category-tag">Zážitkový web / Interaktivita</span>
+                <h3>NovaWild ZOO</h3>
+                <p>Nespoutaná divočina přímo v prohlížeči. Interaktivní prvky a animace, které vtáhnou návštěvníka do děje.</p>
+                <a href="novawild-zoo.html" target="_blank" class="project-btn-premium">Prohlédnout realizaci</a>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div id="lightbox" class="lightbox" aria-hidden="true">
-      <div class="lightbox-backdrop" data-close></div>
-      <div class="lightbox-content">
-        <button class="lightbox-close" type="button" data-close>✕</button>
-        <img id="lightbox-img" src="" alt="Náhled projektu">
       </div>
     </div>
   </section>
+
 
   <section id="pricing" class="section-padding" style="background: rgba(0,0,0,0.3);">
     <div class="container">
