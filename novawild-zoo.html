@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaWild Zoo – Divoká příroda blíž než kdy dřív</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2f1c;
+    --deep: #0d1a0e;
+    --moss: #2d4a2e;
+    --fern: #3d6b3e;
+    --sage: #6a8f5c;
+    --sand: #c8a96e;
+    --gold: #e0b96a;
+    --clay: #8b5e3c;
+    --cream: #f5ead8;
+    --light: #faf6ef;
+    --white: #ffffff;
+    --text: #1a2f1c;
+    --text-light: #5a7a5c;
+    --glass: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.15);
+    --shadow-dark: rgba(13,26,14,0.6);
+    --r: 16px;
+    --r-lg: 28px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--deep);
+    color: var(--cream);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor {
+    width: 16px; height: 16px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  #cursor-ring {
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.6;
+  }
+
+  /* ── PAGE LOADER ── */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--deep);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease 0.3s, visibility 0.8s ease 0.3s;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-icon {
+    font-size: 72px;
+    animation: loaderBounce 1.2s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 30px rgba(224,185,106,0.6));
+  }
+  .loader-bar {
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin-top: 32px;
+    overflow: hidden;
+  }
+  .loader-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sand), var(--gold));
+    border-radius: 2px;
+    animation: loaderFill 1.8s ease-in-out forwards;
+  }
+  .loader-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--sage);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    animation: fadeText 1.8s ease-in-out;
+  }
+  @keyframes loaderBounce { from { transform: translateY(0) scale(1); } to { transform: translateY(-12px) scale(1.1); } }
+  @keyframes loaderFill { from { width: 0; } to { width: 100%; } }
+  @keyframes fadeText { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,26,14,0.85);
+    backdrop-filter: blur(20px);
+    padding: 14px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-icon { font-size: 28px; }
+  .nav-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo-text span { color: var(--gold); }
+  .nav-links {
+    display: flex; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(245,234,216,0.75);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--cream); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--deep) !important;
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.04em;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(224,185,106,0.35) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh;
+    min-height: 700px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      linear-gradient(180deg, rgba(13,26,14,0.6) 0%, rgba(13,26,14,0.95) 100%),
+      url('https://images.unsplash.com/photo-1633704348270-8487cbf345f6?q=80&w=1450&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+  /* Animated jungle SVG background */
+  .hero-jungle {
+    position: absolute; inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.5; /* Snížená opacita pro lepší viditelnost reálného pozadí */
+  }
+  .hero-jungle svg {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .hero-particles {
+    position: absolute; inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0;
+    animation: float var(--dur) ease-in-out infinite var(--delay);
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-20px) scale(1); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    padding: 0 80px;
+    max-width: 780px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: heroFadeUp 1s ease 0.2s both;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+
+  .hero-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    margin-bottom: 8px;
+    animation: heroFadeUp 1s ease 0.4s both;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-h1-line2 {
+    display: block;
+    animation: heroFadeUp 1s ease 0.55s both;
+  }
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(245,234,216,0.7);
+    line-height: 1.6;
+    margin-top: 24px;
+    margin-bottom: 40px;
+    max-width: 520px;
+    animation: heroFadeUp 1s ease 0.7s both;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: heroFadeUp 1s ease 0.9s both;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--deep);
+    padding: 16px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.25s, box-shadow 0.25s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(224,185,106,0.4); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--cream);
+    padding: 16px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid rgba(245,234,216,0.3);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .btn-secondary:hover { background: rgba(245,234,216,0.08); border-color: rgba(245,234,216,0.6); }
+  .btn-ghost {
+    color: rgba(245,234,216,0.6);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+    align-self: center;
+  }
+  .btn-ghost:hover { color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: heroFadeUp 1s ease 1.2s both;
+  }
+  .scroll-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,234,216,0.4);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, rgba(245,234,216,0.5), transparent);
+    animation: scrollAnim 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollAnim { 0%,100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.5); opacity: 0.3; } }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 60px; right: 80px;
+    z-index: 3;
+    display: flex;
+    gap: 32px;
+    animation: heroFadeUp 1s ease 1s both;
+  }
+  .hero-stat-item { text-align: right; }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 11px;
+    color: rgba(245,234,216,0.5);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  @keyframes heroFadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── INFO PANELS ── */
+  #info-panels {
+    background: var(--forest);
+    padding: 0 80px;
+    position: relative;
+    z-index: 10;
+  }
+  .panels-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .panel-card {
+    padding: 40px 32px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: background 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, background 0.3s;
+  }
+  .panel-card:last-child { border-right: none; }
+  .panel-card:hover { background: rgba(255,255,255,0.03); }
+  .panel-card.visible { opacity: 1; transform: translateY(0); }
+  .panel-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 12px rgba(224,185,106,0.3));
+  }
+  .panel-text {}
+  .panel-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .panel-label {
+    font-size: 14px;
+    color: rgba(245,234,216,0.55);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { position: relative; overflow: hidden; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--sage);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--sage);
+    display: block;
+  }
+  .section-h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+  .section-h2 em { font-style: italic; color: var(--gold); }
+  .section-desc {
+    font-size: 16px;
+    color: rgba(245,234,216,0.55);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-top: 16px;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MAP SECTION ── */
+  #map-section {
+    background: var(--deep);
+    padding: 100px 80px;
+  }
+  .map-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .map-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid rgba(245,234,216,0.2);
+    background: transparent;
+    color: rgba(245,234,216,0.6);
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--fern);
+    border-color: var(--fern);
+    color: var(--cream);
+  }
+  .map-container {
+    position: relative;
+    background: var(--forest);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .map-svg-wrap {
+    width: 100%;
+    height: 100%;
+  }
+  .zoo-zone {
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+  .zoo-zone:hover { filter: brightness(1.3); }
+  .map-tooltip {
+    position: absolute;
+    background: rgba(13,26,14,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(224,185,106,0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--cream);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    max-width: 180px;
+    z-index: 10;
+  }
+  .map-tooltip.show { opacity: 1; }
+  .map-tooltip-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  /* ── ANIMALS ── */
+  #animals {
+    background: var(--forest);
+    padding: 100px 80px;
+  }
+  .animals-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 64px;
+  }
+  .animals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .animal-card {
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    group: true;
+  }
+  .animal-card-bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+  }
+  .animal-card:hover .animal-card-bg { transform: scale(1.08); }
+  .animal-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,26,14,0.95) 0%, rgba(13,26,14,0.2) 60%, transparent 100%);
+    transition: background 0.3s;
+  }
+  .animal-card:hover .animal-card-overlay {
+    background: linear-gradient(to top, rgba(13,26,14,0.98) 0%, rgba(13,26,14,0.5) 60%, rgba(45,74,46,0.4) 100%);
+  }
+  .animal-card-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 24px;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+  }
+  .animal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cream);
+  }
+  .animal-bio {
+    font-size: 13px;
+    color: rgba(245,234,216,0.6);
+    margin-top: 6px;
+    line-height: 1.4;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .animal-card:hover .animal-bio { max-height: 60px; opacity: 1; }
+  .animal-tag {
+    display: inline-block;
+    background: rgba(224,185,106,0.2);
+    border: 1px solid rgba(224,185,106,0.3);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+    backdrop-filter: blur(4px);
+  }
+  /* Wide card */
+  .animal-card.wide {
+    grid-column: span 2;
+    aspect-ratio: 2/1;
+  }
+
+  /* ── BOOKING ── */
+  #booking {
+    background: var(--deep);
+    padding: 100px 80px;
+  }
+  .booking-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .booking-form-wrap {
+    background: var(--forest);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .booking-progress {
+    display: flex;
+    background: var(--moss);
+  }
+  .progress-step {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(245,234,216,0.35);
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .progress-step.active { color: var(--gold); }
+  .progress-step.done { color: var(--sage); }
+  .progress-step-bar {
+    position: absolute; bottom: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.5s ease;
+  }
+  .booking-body { padding: 40px; }
+  .booking-step { display: none; }
+  .booking-step.active { display: block; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(245,234,216,0.5);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .form-group input, .form-group select {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 15px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--gold);
+    background: rgba(224,185,106,0.05);
+  }
+  .form-group select option { background: var(--forest); }
+  .ticket-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .ticket-opt {
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: left;
+  }
+  .ticket-opt.selected {
+    border-color: var(--gold);
+    background: rgba(224,185,106,0.08);
+  }
+  .ticket-opt-icon { font-size: 24px; margin-bottom: 8px; }
+  .ticket-opt-name { font-size: 14px; font-weight: 600; color: var(--cream); }
+  .ticket-opt-price { font-size: 13px; color: var(--gold); margin-top: 4px; }
+  .btn-book {
+    width: 100%;
+    background: linear-gradient(135deg, var(--sand), var(--gold));
+    color: var(--deep);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.03em;
+    margin-top: 8px;
+  }
+  .btn-book:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(224,185,106,0.3); }
+  .thank-you { display: none; text-align: center; padding: 60px 40px; }
+  .thank-you.active { display: block; }
+  .ty-icon { font-size: 64px; margin-bottom: 20px; animation: tyBounce 0.8s ease; }
+  @keyframes tyBounce { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+  /* ── EXPERIENCES ── */
+  #experiences {
+    background: var(--forest);
+    padding: 100px 80px;
+  }
+  .exp-scroll {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--moss) transparent;
+    cursor: grab;
+  }
+  .exp-scroll:active { cursor: grabbing; }
+  .exp-card {
+    flex: 0 0 300px;
+    background: var(--moss);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .exp-card:hover { transform: translateY(-6px); }
+  .exp-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .exp-body { padding: 24px; }
+  .exp-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .exp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .exp-desc {
+    font-size: 13px;
+    color: rgba(245,234,216,0.55);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .exp-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .exp-price { color: var(--gold); font-weight: 600; }
+  .exp-dur { color: rgba(245,234,216,0.4); }
+
+  /* ── CONSERVATION ── */
+  #conservation {
+    background: var(--deep);
+    padding: 100px 80px;
+  }
+  .cons-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .cons-visual {
+    position: relative;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    background-image: url('https://images.unsplash.com/photo-1689842548118-5913dde2c5dd?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .cons-visual::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(45,74,46,0.4) 0%, transparent 60%, rgba(13,26,14,0.6) 100%);
+  }
+  .cons-badge {
+    position: absolute;
+    bottom: 32px; left: 32px;
+    z-index: 2;
+    background: rgba(13,26,14,0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(224,185,106,0.3);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  .cons-badge-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .cons-badge-label { font-size: 12px; color: rgba(245,234,216,0.5); }
+  .cons-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 32px 0;
+  }
+  .cons-stat {
+    background: var(--forest);
+    border-radius: var(--r);
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .cons-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .cons-stat-suffix { font-size: 20px; color: var(--sand); }
+  .cons-stat-label {
+    font-size: 13px;
+    color: rgba(245,234,216,0.5);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ── REVIEWS ── */
+  #reviews {
+    background: var(--forest);
+    padding: 100px 80px;
+    overflow: hidden;
+  }
+  .reviews-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    scroll-behavior: smooth;
+  }
+  .reviews-track::-webkit-scrollbar { display: none; }
+  .review-card {
+    flex: 0 0 360px;
+    background: var(--moss);
+    border-radius: var(--r-lg);
+    padding: 32px;
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .review-quote {
+    font-size: 40px;
+    color: var(--gold);
+    opacity: 0.3;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .review-stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+  .review-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(245,234,216,0.8);
+    margin-bottom: 24px;
+  }
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .review-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background-color: var(--fern);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+  }
+  .review-name { font-size: 15px; font-weight: 600; color: var(--cream); }
+  .review-date { font-size: 12px; color: rgba(245,234,216,0.4); margin-top: 2px; }
+  .reviews-nav {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    justify-content: center;
+  }
+  .rev-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    color: var(--cream);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rev-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--deep); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 80px 80px 40px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-brand {}
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+  .footer-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--cream);
+  }
+  .footer-logo-text span { color: var(--gold); }
+  .footer-desc {
+    font-size: 14px;
+    color: rgba(245,234,216,0.4);
+    line-height: 1.7;
+    max-width: 280px;
+    margin-bottom: 24px;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 12px;
+  }
+  .social-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .social-btn:hover { background: var(--fern); transform: translateY(-2px); }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,234,216,0.35);
+    margin-bottom: 20px;
+  }
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-links a {
+    font-size: 14px;
+    color: rgba(245,234,216,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-hours-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: rgba(245,234,216,0.5);
+    margin-bottom: 8px;
+  }
+  .footer-hours-item span:last-child { color: var(--cream); }
+  .newsletter-form {
+    display: flex;
+    gap: 0;
+    margin-top: 16px;
+  }
+  .newsletter-form input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px 0 0 8px;
+    padding: 11px 14px;
+    font-size: 13px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .newsletter-form input:focus { border-color: var(--gold); }
+  .newsletter-form button {
+    background: var(--gold);
+    color: var(--deep);
+    border: none;
+    padding: 11px 16px;
+    border-radius: 0 8px 8px 0;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+  }
+  .newsletter-form button:hover { background: var(--sand); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-bottom-text { font-size: 13px; color: rgba(245,234,216,0.3); }
+  .footer-bottom-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-bottom-links a {
+    font-size: 13px;
+    color: rgba(245,234,216,0.3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-bottom-links a:hover { color: var(--sage); }
+
+  /* ── NIGHT MODE ── */
+  body.night-mode {
+    --forest: #0a1a0b;
+    --moss: #1a3a1c;
+  }
+  .theme-toggle {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--moss);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 900;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .theme-toggle:hover { transform: scale(1.1); background: var(--fern); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--moss); border-radius: 3px; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 1024px) {
+    .panels-grid { grid-template-columns: 1fr 1fr; }
+    .panel-card:nth-child(2) { border-right: none; }
+    .animals-grid { grid-template-columns: 1fr 1fr; }
+    .animal-card.wide { grid-column: span 2; }
+    .map-inner, .booking-inner, .cons-inner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { display: none; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav.scrolled { padding: 12px 24px; }
+    .nav-links { display: none; }
+    .hero-content { padding: 0 32px; }
+    #info-panels, #map-section, #animals, #booking, #experiences, #conservation, #reviews, footer { padding-left: 24px; padding-right: 24px; }
+    .panels-grid { grid-template-columns: 1fr 1fr; }
+    .animals-grid { grid-template-columns: 1fr; }
+    .animal-card.wide { aspect-ratio: 3/2; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .cons-stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-icon">🦁</div>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+  <div class="loader-text">Vítejte v NovaWild Zoo</div>
+</div>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<button class="theme-toggle" id="themeToggle" title="Přepnout den/noc" aria-label="Přepnout motiv">🌙</button>
+
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">
+    <span class="nav-logo-icon">🌿</span>
+    <span class="nav-logo-text">Nova<span>Wild</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#animals">Zvířata</a></li>
+    <li><a href="#map-section">Mapa</a></li>
+    <li><a href="#experiences">Zážitky</a></li>
+    <li><a href="#conservation">Ochrana přírody</a></li>
+    <li><a href="#booking" class="nav-cta">🎟 Koupit vstupenky</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-jungle">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glow1" cx="60%" cy="40%" r="50%">
+          <stop offset="0%" stop-color="#2d4a2e" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#0d1a0e" stop-opacity="0.8"/>
+        </radialGradient>
+        <filter id="blur1"><feGaussianBlur stdDeviation="3"/></filter>
+      </defs>
+      <rect width="1440" height="900" fill="url(#glow1)"/>
+      <g opacity="0.4">
+        <ellipse cx="1200" cy="200" rx="180" ry="80" fill="#1a2f1c" transform="rotate(-30,1200,200)" filter="url(#blur1)"/>
+        <ellipse cx="1300" cy="350" rx="160" ry="70" fill="#2d4a2e" transform="rotate(20,1300,350)" filter="url(#blur1)"/>
+        <ellipse cx="50" cy="600" rx="150" ry="60" fill="#2d4a2e" transform="rotate(15,50,600)" filter="url(#blur1)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-particles" id="heroParticles"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Otevřeno dnes · 9:00 – 19:00
+    </div>
+    <h1 class="hero-h1">
+      Zažij<br>
+      <em>divočinu</em>
+      <span class="hero-h1-line2">naživo</span>
+    </h1>
+    <p class="hero-sub">Exotická zvířata, interaktivní expozice a nezapomenutelné zážitky pro celou rodinu – jen kousek od vás.</p>
+    <div class="hero-ctas">
+      <a href="#booking" class="btn-primary">🎟 Koupit vstupenky</a>
+      <a href="#map-section" class="btn-secondary">🗺 Naplánovat návštěvu</a>
+      <a href="#animals" class="btn-ghost">↓ Prozkoumat zoo</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">150+</div>
+      <div class="hero-stat-label">Druhů zvířat</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">50 ha</div>
+      <div class="hero-stat-label">Přírodní plocha</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">4.9★</div>
+      <div class="hero-stat-label">Hodnocení hostů</div>
+    </div>
+  </div>
+</section>
+
+<div id="info-panels">
+  <div class="panels-grid">
+    <div class="panel-card">
+      <div class="panel-icon">🦓</div>
+      <div class="panel-text">
+        <div class="panel-num">150+</div>
+        <div class="panel-label">druhů exotických zvířat z celého světa</div>
+      </div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-icon">🌿</div>
+      <div class="panel-text">
+        <div class="panel-num">50 ha</div>
+        <div class="panel-label">přírody a přírodních expozic</div>
+      </div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-icon">🐘</div>
+      <div class="panel-text">
+        <div class="panel-num">100%</div>
+        <div class="panel-label">etický a ekologický chov zvířat</div>
+      </div>
+    </div>
+    <div class="panel-card">
+      <div class="panel-icon">🎟</div>
+      <div class="panel-text">
+        <div class="panel-num">Online</div>
+        <div class="panel-label">rezervace vstupenek bez čekání</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="map-section">
+  <div class="map-inner">
+    <div class="reveal">
+      <div class="section-label">Průvodce</div>
+      <h2 class="section-h2">Interaktivní<br><em>mapa zoo</em></h2>
+      <p class="section-desc">Naplánujte svou návštěvu dopředu. Klikněte na zónu a zjistěte, která zvířata vás čekají.</p>
+      <div class="map-filters">
+        <button class="filter-btn active" onclick="filterZone('all',this)">Vše</button>
+        <button class="filter-btn" onclick="filterZone('savci',this)">🦁 Savci</button>
+        <button class="filter-btn" onclick="filterZone('plazi',this)">🐍 Plazi</button>
+        <button class="filter-btn" onclick="filterZone('ptaci',this)">🦜 Ptáci</button>
+        <button class="filter-btn" onclick="filterZone('deti',this)">🧒 Pro děti</button>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s">
+      <div class="map-container">
+        <div class="map-tooltip" id="mapTooltip">
+          <div class="map-tooltip-title" id="tooltipTitle"></div>
+          <div id="tooltipDesc"></div>
+        </div>
+        <svg class="map-svg-wrap" viewBox="0 0 500 375" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="375" fill="#1a2f1c"/>
+          <path d="M250 375 L250 280 L180 200 L100 200 M250 280 L320 200 L400 200 M180 200 L180 120 M320 200 L320 120" stroke="#0d1a0e" stroke-width="20" fill="none"/>
+          <path d="M250 375 L250 280 L180 200 L100 200 M250 280 L320 200 L400 200 M180 200 L180 120 M320 200 L320 120" stroke="#c8a96e" stroke-width="2.5" fill="none" stroke-dasharray="6,4" opacity="0.5"/>
+          <rect x="220" y="340" width="60" height="30" rx="6" fill="#3d6b3e" class="zoo-zone" data-zone="vstup" data-name="Vstup" data-desc="Pokladny, informace, mapy"/>
+          <text x="250" y="358" text-anchor="middle" fill="#c8a96e" font-size="9" font-family="DM Sans">VSTUP</text>
+          <ellipse cx="100" cy="165" rx="60" ry="40" fill="#2d4a2e" class="zoo-zone savci" data-zone="lvi" data-name="🦁 Savana" data-desc="Lvi, levharti, gepardi"/>
+          <text x="100" y="162" text-anchor="middle" fill="#f5ead8" font-size="12">🦁</text>
+          <text x="100" y="175" text-anchor="middle" fill="#c8a96e" font-size="8">Savana</text>
+          <ellipse cx="400" cy="165" rx="60" ry="40" fill="#2d4a2e" class="zoo-zone savci" data-zone="sloni" data-name="🐘 Afriká oblast" data-desc="Sloni, nosorožci, žirafy"/>
+          <text x="400" y="162" text-anchor="middle" fill="#f5ead8" font-size="12">🐘</text>
+          <text x="400" y="175" text-anchor="middle" fill="#c8a96e" font-size="8">Afrika</text>
+          <ellipse cx="180" cy="90" rx="50" ry="38" fill="#3d6b3e" class="zoo-zone plazi" data-zone="plazi" data-name="🐍 Plazí dům" data-desc="Hadi, ještěrky, krokodýli"/>
+          <text x="180" y="87" text-anchor="middle" fill="#f5ead8" font-size="12">🐍</text>
+          <text x="180" y="100" text-anchor="middle" fill="#c8a96e" font-size="8">Plazi</text>
+          <ellipse cx="320" cy="90" rx="50" ry="38" fill="#1a3a1c" class="zoo-zone ptaci" data-zone="ptaci" data-name="🦜 Ptačí ráj" data-desc="Papoušci, tukani, plameňáci"/>
+          <text x="320" y="87" text-anchor="middle" fill="#f5ead8" font-size="12">🦜</text>
+          <text x="320" y="100" text-anchor="middle" fill="#c8a96e" font-size="8">Ptáci</text>
+          <ellipse cx="250" cy="220" rx="45" ry="32" fill="#4a6b2e" class="zoo-zone deti" data-zone="deti" data-name="🧒 Dětský svět" data-desc="Kontaktní zoo, kolotoče, krmení"/>
+          <text x="250" y="217" text-anchor="middle" fill="#f5ead8" font-size="12">🧒</text>
+          <text x="250" y="228" text-anchor="middle" fill="#c8a96e" font-size="7">Děti</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="animals">
+  <div class="animals-header reveal">
+    <div>
+      <div class="section-label">Obyvatelé</div>
+      <h2 class="section-h2">Naše <em>zvířata</em></h2>
+    </div>
+    <a href="#" class="btn-secondary">Poznat všechna zvířata →</a>
+  </div>
+  <div class="animals-grid">
+    <div class="animal-card wide reveal">
+      <div class="animal-card-bg" style="background-image: url('https://plus.unsplash.com/premium_photo-1664297529636-fd2d05964a1e?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Hvězda zoo</div>
+        <div class="animal-name">Kira – Amurský tygr</div>
+        <div class="animal-bio">Nejohroženější kočkovitá šelma světa. Kira přišla k nám z polského záchranného programu v roce 2021.</div>
+      </div>
+    </div>
+    <div class="animal-card reveal" style="transition-delay:0.1s">
+      <div class="animal-card-bg" style="background-image: url('https://images.unsplash.com/photo-1534995890293-84afcbee574f?q=80&w=780&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Afrika</div>
+        <div class="animal-name">Nosorožec bílý</div>
+        <div class="animal-bio">Jeden z posledních exemplářů druhu v Evropě.</div>
+      </div>
+    </div>
+    <div class="animal-card reveal" style="transition-delay:0.15s">
+      <div class="animal-card-bg" style="background-image: url('https://plus.unsplash.com/premium_photo-1661821992598-19a1db29b5b2?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Ptáci</div>
+        <div class="animal-name">Plameňák růžový</div>
+        <div class="animal-bio">Kolonie 40 ptáků v našem lagunálním jezírku.</div>
+      </div>
+    </div>
+    <div class="animal-card reveal" style="transition-delay:0.2s">
+      <div class="animal-card-bg" style="background-image: url('https://plus.unsplash.com/premium_photo-1667667846042-cebd599628d5?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Plazi</div>
+        <div class="animal-name">Nilský krokodýl</div>
+        <div class="animal-bio">Skvěle zachovalý exemplář z tropického skleníku.</div>
+      </div>
+    </div>
+    <div class="animal-card reveal" style="transition-delay:0.25s">
+      <div class="animal-card-bg" style="background-image: url('https://images.unsplash.com/photo-1547721064-da6cfb341d50?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Savci</div>
+        <div class="animal-name">Žirafa síťovaná</div>
+        <div class="animal-bio">Při krmení vás pohladí metrovým jazykem!</div>
+      </div>
+    </div>
+    <div class="animal-card reveal" style="transition-delay:0.3s">
+      <div class="animal-card-bg" style="background-image: url('https://images.unsplash.com/photo-1732209779707-b7ad35ba6efc?q=80&w=772&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="animal-card-overlay"></div>
+      <div class="animal-card-info">
+        <div class="animal-tag">Ptáci</div>
+        <div class="animal-name">Ararauna modrá</div>
+        <div class="animal-bio">Mluvící papoušek, který zná přes 80 slov česky.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="booking-inner">
+    <div class="reveal">
+      <div class="section-label">Rezervace</div>
+      <h2 class="section-h2">Zarezervujte si<br><em>vstupenky</em></h2>
+      <p class="section-desc">Rychlá online rezervace ve třech jednoduchých krocích. Žádné čekání na pokladně.</p>
+      <div style="margin-top:40px; display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:center; gap:16px; font-size:14px; color:rgba(245,234,216,0.6);">
+          <span style="font-size:20px;">✅</span> Okamžité potvrzení na e-mail
+        </div>
+        <div style="display:flex; align-items:center; gap:16px; font-size:14px; color:rgba(245,234,216,0.6);">
+          <span style="font-size:20px;">✅</span> Volné storno až 24h předem
+        </div>
+        <div style="display:flex; align-items:center; gap:16px; font-size:14px; color:rgba(245,234,216,0.6);">
+          <span style="font-size:20px;">✅</span> Vstupenky v mobilu – bez tisku
+        </div>
+        <div style="display:flex; align-items:center; gap:16px; font-size:14px; color:rgba(245,234,216,0.6);">
+          <span style="font-size:20px;">✅</span> Dítě do 3 let zdarma
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s">
+      <div class="booking-form-wrap" id="bookingWrap">
+        <div class="booking-progress">
+          <div class="progress-step active" data-step="1">
+            1. Datum
+            <div class="progress-step-bar" id="bar1" style="width:100%"></div>
+          </div>
+          <div class="progress-step" data-step="2">
+            2. Lístky
+            <div class="progress-step-bar" id="bar2" style="width:0%"></div>
+          </div>
+          <div class="progress-step" data-step="3">
+            3. Potvrzení
+            <div class="progress-step-bar" id="bar3" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="booking-body">
+          <div class="booking-step active" id="step1">
+            <div class="form-group">
+              <label>Vyberte datum návštěvy</label>
+              <input type="date" id="visitDate" min="">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Dospělí (13+)</label>
+                <input type="number" min="0" max="20" value="2" id="adults">
+              </div>
+              <div class="form-group">
+                <label>Děti (3–12)</label>
+                <input type="number" min="0" max="20" value="1" id="children">
+              </div>
+            </div>
+            <button class="btn-book" onclick="goStep(2)">Pokračovat →</button>
+          </div>
+          <div class="booking-step" id="step2">
+            <p style="font-size:14px; color:rgba(245,234,216,0.5); margin-bottom:20px;">Vyberte typ vstupenky:</p>
+            <div class="ticket-options">
+              <div class="ticket-opt selected" onclick="selectTicket(this)">
+                <div class="ticket-opt-icon">🌞</div>
+                <div class="ticket-opt-name">Denní vstup</div>
+                <div class="ticket-opt-price">od 349 Kč</div>
+              </div>
+              <div class="ticket-opt" onclick="selectTicket(this)">
+                <div class="ticket-opt-icon">🌙</div>
+                <div class="ticket-opt-name">Noční zoo</div>
+                <div class="ticket-opt-price">od 449 Kč</div>
+              </div>
+              <div class="ticket-opt" onclick="selectTicket(this)">
+                <div class="ticket-opt-icon">👨‍👩‍👧</div>
+                <div class="ticket-opt-name">Rodinný</div>
+                <div class="ticket-opt-price">od 899 Kč</div>
+              </div>
+              <div class="ticket-opt" onclick="selectTicket(this)">
+                <div class="ticket-opt-icon">🎓</div>
+                <div class="ticket-opt-name">Edu skupina</div>
+                <div class="ticket-opt-price">od 199 Kč</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <button class="btn-secondary" style="flex:1;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:var(--cream);padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;cursor:pointer;" onclick="goStep(1)">← Zpět</button>
+              <button class="btn-book" style="flex:2" onclick="goStep(3)">Potvrdit →</button>
+            </div>
+          </div>
+          <div class="booking-step" id="step3">
+            <div class="form-group">
+              <label>Jméno a příjmení</label>
+              <input type="text" placeholder="Jana Nováková">
+            </div>
+            <div class="form-group">
+              <label>E-mail</label>
+              <input type="email" placeholder="jana@email.cz">
+            </div>
+            <div style="background:rgba(224,185,106,0.08); border:1px solid rgba(224,185,106,0.2); border-radius:12px; padding:16px; margin-bottom:20px; font-size:14px; color:rgba(245,234,216,0.7);">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Denní vstup × 2</span><span style="color:var(--gold)">698 Kč</span></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Dítě × 1</span><span style="color:var(--gold)">249 Kč</span></div>
+              <div style="display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:8px;font-weight:600;color:var(--cream);"><span>Celkem</span><span style="color:var(--gold)">947 Kč</span></div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <button class="btn-secondary" style="flex:1;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:var(--cream);padding:14px;border-radius:12px;font-family:'DM Sans',sans-serif;cursor:pointer;" onclick="goStep(2)">← Zpět</button>
+              <button class="btn-book" style="flex:2" onclick="submitBooking()">🎟 Zaplatit a objednat</button>
+            </div>
+          </div>
+        </div>
+        <div class="thank-you" id="thankYou">
+          <div class="ty-icon">🎉</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:12px;">Rezervace potvrzena!</h3>
+          <p style="font-size:14px;color:rgba(245,234,216,0.6);line-height:1.7;">Vstupenky byly odeslány na váš e-mail. Těšíme se na vaši návštěvu v NovaWild Zoo! 🦁</p>
+          <button class="btn-book" style="margin-top:24px;max-width:200px;margin-left:auto;margin-right:auto;" onclick="resetBooking()">Nová rezervace</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experiences">
+  <div class="reveal" style="margin-bottom:52px;">
+    <div class="section-label">Prožijte víc</div>
+    <h2 class="section-h2">Zážitky & <em>akce</em></h2>
+    <p class="section-desc">Víc než jen prohlídka. Přijďte si zvířata vyzkoušet zblízka.</p>
+  </div>
+  <div class="exp-scroll" id="expScroll">
+    <div class="exp-card">
+      <div class="exp-img" style="background-image: url('https://plus.unsplash.com/premium_photo-1682091965770-c7121113293a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Oblíbené</div>
+        <div class="exp-title">Krmení žiraf</div>
+        <div class="exp-desc">Osobní setkání s našimi žirafami. Nakrmíte je přímo z ruky ve výšce 4 metrů!</div>
+        <div class="exp-meta"><span class="exp-price">od 299 Kč</span><span class="exp-dur">⏱ 30 min</span></div>
+      </div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-img" style="background-image: url('https://images.unsplash.com/photo-1755003842738-be947b52504e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Adrenalín</div>
+        <div class="exp-title">Setkání s plazy</div>
+        <div class="exp-desc">Podržte v rukou skutečného krajtu a přemůžte svůj strach! S odborným průvodcem.</div>
+        <div class="exp-meta"><span class="exp-price">od 199 Kč</span><span class="exp-dur">⏱ 45 min</span></div>
+      </div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-img" style="background-image: url('https://plus.unsplash.com/premium_photo-1661936361131-c421746dcd0d?q=80&w=1318&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Výjimečné</div>
+        <div class="exp-title">Noční zoo</div>
+        <div class="exp-desc">Tajemná atmosféra po setmění. Spatříte zvířata, která ve dne spí. Pouze v létě.</div>
+        <div class="exp-meta"><span class="exp-price">od 449 Kč</span><span class="exp-dur">⏱ 2 hod</span></div>
+      </div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-img" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop');"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Školy</div>
+        <div class="exp-title">Edu programy</div>
+        <div class="exp-desc">Vzdělávací programy šité na míru školním skupinám. Interaktivní, zábavné, naučné.</div>
+        <div class="exp-meta"><span class="exp-price">od 99 Kč/žák</span><span class="exp-dur">⏱ 3 hod</span></div>
+      </div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-img" style="background-image: url('https://images.unsplash.com/photo-1598207981454-d849f4ac3a9e?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+      <div class="exp-body">
+        <div class="exp-tag">Nové</div>
+        <div class="exp-title">Motýlí dům</div>
+        <div class="exp-desc">Procházka tropickým skleníkem plným stovek exotických motýlů ze všech koutů světa.</div>
+        <div class="exp-meta"><span class="exp-price">od 149 Kč</span><span class="exp-dur">⏱ volný čas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="conservation">
+  <div class="cons-inner">
+    <div class="reveal">
+      <div class="cons-visual">
+        <div class="cons-badge">
+          <div class="cons-badge-num">2009</div>
+          <div class="cons-badge-label">Rok založení</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s">
+      <div class="section-label">Náš závazek</div>
+      <h2 class="section-h2">Chráníme<br><em>přírodu</em></h2>
+      <p class="section-desc">NovaWild Zoo není jen místo k zábavě. Jsme aktivní ochránci přírody a součást globálních záchranných programů.</p>
+      <div class="cons-stats">
+        <div class="cons-stat">
+          <div class="cons-stat-num"><span class="counter" data-target="847">0</span><span class="cons-stat-suffix">+</span></div>
+          <div class="cons-stat-label">Zachráněných zvířat od roku 2009</div>
+        </div>
+        <div class="cons-stat">
+          <div class="cons-stat-num"><span class="counter" data-target="23">0</span></div>
+          <div class="cons-stat-label">Podpořených ochranářských projektů</div>
+        </div>
+        <div class="cons-stat">
+          <div class="cons-stat-num"><span class="counter" data-target="12">0</span></div>
+          <div class="cons-stat-label">Zemí, kde aktivně pomáháme</div>
+        </div>
+        <div class="cons-stat">
+          <div class="cons-stat-num"><span class="counter" data-target="5">0</span><span class="cons-stat-suffix">M Kč</span></div>
+          <div class="cons-stat-label">Investováno do ochrany přírody</div>
+        </div>
+      </div>
+      <a href="#" class="btn-primary" style="display:inline-flex;">🌿 Pomozte chránit přírodu</a>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="reveal" style="margin-bottom:52px;">
+    <div class="section-label">Hodnocení</div>
+    <h2 class="section-h2">Co říkají <em>návštěvníci</em></h2>
+  </div>
+  <div class="reviews-track" id="reviewsTrack">
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Naprosto úžasný zážitek! Krmení žiraf byl vrchol naší návštěvy. Personál byl skvělý, areál čistý a dobře udržovaný. Určitě se vrátíme.</div>
+      <div class="review-author">
+        <div class="review-avatar" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&auto=format&fit=crop');"></div>
+        <div>
+          <div class="review-name">Petra Horáková</div>
+          <div class="review-date">Dubna 2025 · ověřená návštěva</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">S dětmi jsme tu strávili celý den a vůbec se nenudily! Edu program pro školáky byl výborný – děti se dozvěděly spoustu nových věcí a zároveň se bavily.</div>
+      <div class="review-author">
+        <div class="review-avatar" style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop');"></div>
+        <div>
+          <div class="review-name">Tomáš Blažek</div>
+          <div class="review-date">Března 2025 · rodinná návštěva</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Noční zoo je prostě magie! Nikdy dřív jsem neviděla tak blízko lva. Atmosféra po setmění je něco, co musíte zažít. Rezervujte si předem!</div>
+      <div class="review-author">
+        <div class="review-avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop');"></div>
+        <div>
+          <div class="review-name">Michaela Tůmová</div>
+          <div class="review-date">Července 2025 · solo návštěva</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Online rezervace proběhla hladce, vstupenky přišly za pár sekund. Na místě žádné fronty. Takto by to mělo fungovat všude! Amurský tygr Kira je neuvěřitelná.</div>
+      <div class="review-author">
+        <div class="review-avatar" style="background-image: url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop');"></div>
+        <div>
+          <div class="review-name">Jakub Mrázek</div>
+          <div class="review-date">Února 2025 · ověřená návštěva</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="reviews-nav">
+    <button class="rev-btn" id="revPrev">←</button>
+    <button class="rev-btn" id="revNext">→</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="footer-logo">
+        <span style="font-size:24px">🌿</span>
+        <span class="footer-logo-text">Nova<span>Wild</span></span>
+      </a>
+      <p class="footer-desc">Divoká příroda blíž než kdy dřív. Zoo, která spojuje lidi s přírodou a stará se o budoucnost planety.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn">📘</a>
+        <a href="#" class="social-btn">📸</a>
+        <a href="#" class="social-btn">🐦</a>
+        <a href="#" class="social-btn">▶️</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigace</div>
+      <ul class="footer-links">
+        <li><a href="#animals">Naše zvířata</a></li>
+        <li><a href="#map-section">Mapa areálu</a></li>
+        <li><a href="#experiences">Zážitky</a></li>
+        <li><a href="#conservation">Ochrana přírody</a></li>
+        <li><a href="#booking">Koupit vstupenky</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Otevírací doba</div>
+      <div class="footer-hours-item"><span>Po – Pá</span><span>9:00 – 18:00</span></div>
+      <div class="footer-hours-item"><span>So – Ne</span><span>9:00 – 19:00</span></div>
+      <div class="footer-hours-item"><span>Svátky</span><span>10:00 – 17:00</span></div>
+      <div style="margin-top:16px; font-size:12px; color:rgba(245,234,216,0.3);">Pokladna zavírá 1h před uzavřením.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Newsletter</div>
+      <p style="font-size:13px; color:rgba(245,234,216,0.45); margin-bottom:12px; line-height:1.5;">Novinky, akce a slevy přímo do vaší schránky.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="váš@email.cz">
+        <button>→</button>
+      </div>
+      <div style="margin-top:24px;">
+        <div class="footer-col-title" style="margin-bottom:12px;">Kontakt</div>
+        <div style="font-size:13px; color:rgba(245,234,216,0.45); line-height:2;">
+          📍 Divoká 42, Praha 9<br>
+          📞 +420 222 333 444<br>
+          ✉️ info@novawild.cz
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-text">© 2026 NovaWild Zoo, s.r.o. Všechna práva vyhrazena.</div>
+    <div class="footer-bottom-links">
+      <a href="#">Ochrana soukromí</a>
+      <a href="#">Podmínky</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 2000);
+});
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+function animRing() {
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button, .animal-card, .exp-card, .zoo-zone, .filter-btn, .ticket-opt').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '24px'; cursor.style.height = '24px'; ring.style.width = '60px'; ring.style.height = '60px'; ring.style.opacity = '0.4'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '16px'; cursor.style.height = '16px'; ring.style.width = '40px'; ring.style.height = '40px'; ring.style.opacity = '0.6'; });
+});
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── PARTICLES ──
+const pWrap = document.getElementById('heroParticles');
+for (let i = 0; i < 25; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.setProperty('--dur', (Math.random() * 8 + 6) + 's');
+  p.style.setProperty('--delay', (Math.random() * -12) + 's');
+  p.style.left = Math.random() * 100 + '%';
+  p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+  pWrap.appendChild(p);
+}
+
+// ── INTERSECTION OBSERVER ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('panel-card')) {
+        const idx = [...e.target.parentElement.children].indexOf(e.target);
+        e.target.style.transitionDelay = (idx * 0.1) + 's';
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal, .panel-card').forEach(el => obs.observe(el));
+
+// ── COUNTERS ──
+const cObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = +e.target.dataset.target;
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        e.target.textContent = Math.floor(current);
+        if (current >= target) clearInterval(timer);
+      }, 20);
+      cObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => cObs.observe(el));
+
+// ── MAP ──
+document.querySelectorAll('.zoo-zone').forEach(zone => {
+  zone.addEventListener('mouseenter', function(e) {
+    const tt = document.getElementById('mapTooltip');
+    document.getElementById('tooltipTitle').textContent = this.dataset.name;
+    document.getElementById('tooltipDesc').textContent = this.dataset.desc;
+    tt.classList.add('show');
+    const rect = this.closest('.map-container').getBoundingClientRect();
+    const zRect = this.getBoundingClientRect();
+    tt.style.left = (zRect.left - rect.left - 20) + 'px';
+    tt.style.top = (zRect.top - rect.top - 90) + 'px';
+  });
+  zone.addEventListener('mouseleave', () => document.getElementById('mapTooltip').classList.remove('show'));
+});
+
+function filterZone(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.zoo-zone').forEach(z => {
+    if (type === 'all' || z.classList.contains(type)) {
+      z.style.opacity = '1';
+    } else {
+      z.style.opacity = '0.25';
+    }
+  });
+}
+
+// ── BOOKING ──
+let currentStep = 1;
+function goStep(n) {
+  document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.progress-step').forEach((s,i) => {
+    s.classList.toggle('active', i+1 === n);
+    s.classList.toggle('done', i+1 < n);
+    document.getElementById('bar'+(i+1)).style.width = (i+1 <= n ? '100%' : '0%');
+  });
+  document.getElementById('step'+n).classList.add('active');
+  currentStep = n;
+}
+function selectTicket(el) {
+  document.querySelectorAll('.ticket-opt').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function submitBooking() {
+  document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
+  document.querySelector('.booking-progress').style.display = 'none';
+  document.getElementById('thankYou').classList.add('active');
+}
+function resetBooking() {
+  document.getElementById('thankYou').classList.remove('active');
+  document.querySelector('.booking-progress').style.display = 'flex';
+  goStep(1);
+}
+// Set min date
+const dateInput = document.getElementById('visitDate');
+if (dateInput) {
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+  dateInput.value = today;
+}
+
+// ── REVIEWS NAV ──
+const track = document.getElementById('reviewsTrack');
+document.getElementById('revNext').addEventListener('click', () => track.scrollBy({ left: 390, behavior: 'smooth' }));
+document.getElementById('revPrev').addEventListener('click', () => track.scrollBy({ left: -390, behavior: 'smooth' }));
+
+// ── EXP DRAG SCROLL ──
+const expEl = document.getElementById('expScroll');
+let isDown = false, startX, scrollLeft;
+expEl.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - expEl.offsetLeft; scrollLeft = expEl.scrollLeft; });
+expEl.addEventListener('mouseleave', () => isDown = false);
+expEl.addEventListener('mouseup', () => isDown = false);
+expEl.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - expEl.offsetLeft;
+  expEl.scrollLeft = scrollLeft - (x - startX) * 1.5;
+});
+
+// ── THEME TOGGLE ──
+const toggleBtn = document.getElementById('themeToggle');
+let isDark = false;
+toggleBtn.addEventListener('click', () => {
+  isDark = !isDark;
+  document.body.classList.toggle('night-mode', isDark);
+  toggleBtn.textContent = isDark ? '☀️' : '🌙';
+});
+
+// parallax hero
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  const heroJungle = document.querySelector('.hero-jungle');
+  if (heroJungle) heroJungle.style.transform = `translateY(${y * 0.35}px)`;
+  const heroContent = document.querySelector('.hero-content');
+  if (heroContent) heroContent.style.transform = `translateY(${y * 0.15}px)`;
+});
+</script>
+</body>
+</html>
