@@ -1,4 +1,3 @@
-/*------*/
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -304,21 +303,18 @@
 
     @keyframes menuItemIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ===== MEDIA QUERIES (OPTIMIZED FOR MOBILE RESPONSIVENESS) ===== */
+    /* ===== MEDIA QUERIES ===== */
     @media (min-width: 901px) {
       .cta-section { padding: 100px 0 80px; }
     }
 
     @media (max-width: 900px) {
-      /* Reset Custom Cursor */
       html, body, body * { cursor: auto !important; }
       .cursor-dot, .cursor-outline { display: none; }
       
-      /* Navigace */
       .nav-links, .nav-cta { display: none; }
       .nav-burger { display: block; }
       
-      /* Layout a Grid */
       .philosophy-grid, .service-block { grid-template-columns: 1fr; gap: 40px; }
       .service-block { padding: 30px; }
       .service-num { font-size: 3.5rem; }
@@ -328,16 +324,9 @@
       .section-padding { padding: 100px 0; }
       .hero-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
 
-      /* Modální okno - Fullscreen pro mobil */
       .modal__dialog {
-        width: 100%;
-        max-width: 100%;
-        height: 100dvh;
-        max-height: 100dvh;
-        margin: 0;
-        border-radius: 0;
-        padding: 20px 16px;
-        overflow-y: auto;
+        width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh;
+        margin: 0; border-radius: 0; padding: 20px 16px; overflow-y: auto;
       }
       .modal__body { overflow: visible; padding-right: 0; }
       .contact-form { margin-top: 30px; }
@@ -356,7 +345,6 @@
       h2 { font-size: 2rem !important; line-height: 1.2; }
       #pricing h2 { font-size: 1.8rem !important; }
       
-      /* Tlačítka a formuláře */
       .email-cta { display: block; padding: 18px; border-radius: 18px; background: linear-gradient(135deg, var(--coral), var(--magenta)); color: #fff; text-align: center; }
       .email-cta strong { display: block; font-size: 1.1rem; margin-bottom: 6px; }
       .email-cta span { font-size: 0.9rem; opacity: 0.85; word-break: break-all; }
@@ -472,6 +460,36 @@
         <div class="glass-card service-block spotlight-card reveal-scroll">
           <div class="service-content">
             <span class="service-num">03</span>
+            <h3 class="service-title">Rezervační systémy na míru</h3>
+            <p class="service-text">Zautomatizujte příjem klientů. Vytvoříme vám kalendář na míru, přes který se klienti sami objednají a zaplatí.</p>
+            <div class="tags"><span class="tag">Kalendáře</span><span class="tag">Notifikace</span><span class="tag">Platby</span></div>
+          </div>
+          <div class="service-visual">📅</div>
+        </div>
+
+        <div class="glass-card service-block reverse spotlight-card reveal-scroll">
+          <div class="service-content">
+            <span class="service-num">04</span>
+            <h3 class="service-title">Webové aplikace & Moduly</h3>
+            <p class="service-text">Kalkulačky, interní portály nebo konfigurátory zakázek (jako je ten náš). Pomáháme firmám zefektivnit procesy.</p>
+            <div class="tags"><span class="tag">React/Vue</span><span class="tag">Node.js</span><span class="tag">API Integrace</span></div>
+          </div>
+          <div class="service-visual">⚙️</div>
+        </div>
+
+        <div class="glass-card service-block spotlight-card reveal-scroll">
+          <div class="service-content">
+            <span class="service-num">05</span>
+            <h3 class="service-title">Minihry a Gamifikace</h3>
+            <p class="service-text">Odlište se hravou formou. Zaujmete uživatele a prodloužíte čas strávený na webu pomocí interaktivních miniher.</p>
+            <div class="tags"><span class="tag">Phaser</span><span class="tag">Canvas</span><span class="tag">Engagement</span></div>
+          </div>
+          <div class="service-visual">🎮</div>
+        </div>
+
+        <div class="glass-card service-block reverse spotlight-card reveal-scroll">
+          <div class="service-content">
+            <span class="service-num">06</span>
             <h3 class="service-title">Branding &amp; Identita</h3>
             <p class="service-text">Kompletní vizuální identita, která je rozpoznatelná a konzistentní: logo, barvy, typografie a brand‑guidelines.</p>
             <div class="tags"><span class="tag">Logo</span><span class="tag">Barevnost</span><span class="tag">Typografie</span><span class="tag">Brandbook</span></div>
@@ -479,10 +497,10 @@
           <div class="service-visual">🎨</div>
         </div>
 
-        <div class="glass-card service-block reverse spotlight-card coming-soon reveal-scroll">
+        <div class="glass-card service-block spotlight-card coming-soon reveal-scroll">
           <div class="badge-soon">PŘIPRAVUJEME</div>
           <div class="service-content">
-            <span class="service-num">04</span>
+            <span class="service-num">07</span>
             <h3 class="service-title">AI &amp; Automatizace</h3>
             <p class="service-text">Integrace AI chatbotů a automatizací pro podporu 24/7, úsporu času a zvýšení konverzí.</p>
             <div class="tags"><span class="tag">OpenAI API</span><span class="tag">Chatboty</span><span class="tag">Automatizace</span></div>
@@ -570,43 +588,43 @@
 
   <section id="pricing" class="section-padding" style="background: rgba(0,0,0,0.3);">
     <div class="container">
-      <h2 style="text-align: center; margin-bottom: 20px; font-size: 3rem;" class="reveal-scroll">Transparentní investice</h2>
+      <h2 style="text-align: center; margin-bottom: 20px; font-size: 3rem;" class="reveal-scroll">Investice do vašeho růstu</h2>
       <p class="pricing-note reveal-scroll">Sleva platí do konce dubna — <span id="countdown" class="countdown">počítám…</span></p>
-      <p class="pricing-subnote reveal-scroll">Žádné skryté poplatky. Platíte za kvalitu. Cena se může lišit podle náročnosti a rozsahu.</p>
+      <p class="pricing-subnote reveal-scroll">Naše kapacity omezujeme na 2 projekty měsíčně. Žádné skryté poplatky. Platíte za výsledky.</p>
 
       <div class="pricing-grid reveal-scroll">
         <div class="pricing-card spotlight-card">
           <div class="card-header"><span class="chip chip--sale">SLEVA –4 000 Kč</span></div>
           <h3 class="plan-title">Start</h3>
           <div class="price-wrap">
-            <div class="price-old">10 000 Kč</div>
-            <div class="price-new">6 000+ <span class="price-unit">Kč</span></div>
+            <div class="price-old">12 900 Kč</div>
+            <div class="price-new">8 900+ <span class="price-unit">Kč</span></div>
           </div>
-          <p class="plan-desc">Pro freelancery a malé projekty.</p>
+          <p class="plan-desc">Pro freelancery a menší prezentace.</p>
           <ul class="plan-list">
-            <li>One‑page design</li>
+            <li>Moderní One‑page design</li>
             <li>Kontaktní formulář</li>
-            <li>Responzivita</li>
+            <li>Základní responzivita</li>
           </ul>
           <a href="#contact" class="btn-main plan-cta magnetic-btn">Poptávka</a>
         </div>
 
         <div class="pricing-card recommended spotlight-card">
           <div class="card-header">
-            <span class="chip chip--reco">Doporučujeme</span>
+            <span class="chip chip--reco">Nejžádanější</span>
             <span class="chip chip--sale">SLEVA –7 000 Kč</span>
           </div>
           <h3 class="plan-title" style="color:#fff;">Business</h3>
           <div class="price-wrap">
-            <div class="price-old">16 000 Kč</div>
-            <div class="price-new coral-gradient">9 000+ <span class="price-unit">Kč</span></div>
+            <div class="price-old">24 900 Kč</div>
+            <div class="price-new coral-gradient">17 900+ <span class="price-unit">Kč</span></div>
           </div>
-          <p class="plan-desc">Pro firmy, které chtějí růst.</p>
+          <p class="plan-desc">Pro firmy s jasným cílem a vizí.</p>
           <ul class="plan-list">
-            <li>Více podstránek</li>
-            <li>Pokročilé animace</li>
-            <li>SEO optimalizace</li>
-            <li>Google Analytics</li>
+            <li>Více podstránek na míru</li>
+            <li>Pokročilé animace (GSAP)</li>
+            <li>SEO optimalizace pro Google</li>
+            <li>Rychlé a bezpečné kódování</li>
           </ul>
           <a href="#contact" class="btn-main plan-cta magnetic-btn">Chci tento web</a>
         </div>
@@ -617,12 +635,12 @@
           <div class="price-wrap">
             <div class="price-new" style="background: linear-gradient(90deg, #ccc, #fff); -webkit-background-clip: text; color: transparent;">Na míru</div>
           </div>
-          <p class="plan-desc">Pro náročné klienty.</p>
+          <p class="plan-desc">Pro náročné a technické projekty.</p>
           <ul class="plan-list">
-            <li>Komplexní řešení</li>
-            <li>3D prvky / WebGL</li>
-            <li>Integrace systémů</li>
-            <li>Branding</li>
+            <li>Webové aplikace a konfigurátory</li>
+            <li>Rezervační systémy na míru</li>
+            <li>WebGL a pokročilé 3D prvky</li>
+            <li>Kompletní Branding</li>
           </ul>
           <a href="#contact" class="btn-main plan-cta magnetic-btn">Konzultace</a>
         </div>
@@ -653,37 +671,75 @@
           <form id="configForm" class="configurator" onsubmit="return false;">
             <div class="presets">
               <button type="button" class="preset" data-preset="start">Start</button>
-              <button type="button" class="preset" data-preset="business" data-recommended="true">Business (Doporučujeme)</button>
-              <button type="button" class="preset" data-preset="premium">Premium</button>
+              <button type="button" class="preset" data-preset="business" data-recommended="true">Business (Nejžádanější)</button>
+              <button type="button" class="preset" data-preset="premium">Premium Aplikace</button>
             </div>
 
             <div class="config-group">
               <h3>Typ projektu</h3>
-              <label class="pill"><input type="radio" name="projectType" value="6000" data-label="One‑page" checked> <span>One‑page</span> <span class="pill__price">6 000 Kč</span></label>
-              <label class="pill"><input type="radio" name="projectType" value="9000" data-label="Firemní web"> <span>Firemní web</span> <span class="pill__price">9 000 Kč</span></label>
-              <label class="pill"><input type="radio" name="projectType" value="15000" data-label="Komplexní řešení"> <span>Komplexní řešení</span> <span class="pill__price">15 000 Kč</span></label>
+              <label class="pill"><input type="radio" name="projectType" value="8900" data-label="One‑page" checked> <span>One‑page</span> <span class="pill__price">8 900 Kč</span></label>
+              <label class="pill"><input type="radio" name="projectType" value="17900" data-label="Firemní web"> <span>Firemní web</span> <span class="pill__price">17 900 Kč</span></label>
+              <label class="pill"><input type="radio" name="projectType" value="34000" data-label="Komplexní web / Aplikace"> <span>Komplexní web / Aplikace</span> <span class="pill__price">34 000 Kč</span></label>
             </div>
 
             <div class="config-group">
               <h3>Počet podstránek</h3>
               <input id="pages" name="pages" type="range" min="1" max="15" value="3">
-              <div class="range-value" id="rangeValue"><strong>3</strong> podstránky × <strong>800 Kč</strong></div>
+              <div class="range-value" id="rangeValue"><strong>3</strong> podstránky × <strong>1 500 Kč</strong></div>
             </div>
 
             <div class="config-group">
-              <h3>Vyberte funkce</h3>
+              <h3>Vyberte prémiové funkce a moduly</h3>
+
+              <label class="check">
+                <div class="check-header">
+                  <span>Web App modul / Konfigurátor</span>
+                  <button type="button" class="help-toggle">Co to je?</button>
+                </div>
+                <input type="checkbox" value="15000" data-label="Web App modul">
+                <em>15 000 Kč</em>
+                <div class="help-panel">
+                  <p><strong>Co to je:</strong><br>Kalkulačka, konfigurátor služeb nebo interní systém.</p>
+                  <p><strong>Proč to chtít:</strong><br>Funguje jako obchodník a dává lidem přesně to, co chtějí, hned na webu.</p>
+                </div>
+              </label>
+
+              <label class="check">
+                <div class="check-header">
+                  <span>Rezervační systém na míru</span>
+                  <button type="button" class="help-toggle">Co to je?</button>
+                </div>
+                <input type="checkbox" value="5000" data-label="Rezervační systém">
+                <em>5 000 Kč</em>
+                <div class="help-panel">
+                  <p><strong>Co to je:</strong><br>Online kalendář s objednávkovým procesem pro vaše klienty.</p>
+                  <p><strong>Proč to chtít:</strong><br>Plně automatizuje příjem zákazníků a odbourává e-mailování a telefonování.</p>
+                </div>
+              </label>
+
+              <label class="check">
+                <div class="check-header">
+                  <span>Webová minihra (Gamifikace)</span>
+                  <button type="button" class="help-toggle">Co to je?</button>
+                </div>
+                <input type="checkbox" value="8000" data-label="Minihra / Gamifikace">
+                <em>8 000 Kč</em>
+                <div class="help-panel">
+                  <p><strong>Co to je:</strong><br>Kreativní 2D nebo 3D hra zakomponovaná v designu webu.</p>
+                  <p><strong>Proč to chtít:</strong><br>Maximální engagement. Návštěvníci si vás zapamatují a sdílí vás.</p>
+                </div>
+              </label>
 
               <label class="check">
                 <div class="check-header">
                   <span>Pokročilé animace</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="1500" data-label="Pokročilé animace">
-                <em>1 500 Kč</em>
+                <input type="checkbox" value="3500" data-label="Pokročilé animace">
+                <em>3 500 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Pohyby a animace, které vedou pozornost uživatele po webu.</p>
-                  <p><strong>Proč to chtít:</strong><br>Návštěvníci se na webu déle zdrží a častěji kliknou na poptávku.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud chceš jen jednoduchý informační web.</p>
+                  <p><strong>Co to je:</strong><br>Jemné pohyby (paralaxy, scrolly), které vedou pozornost uživatele.</p>
+                  <p><strong>Proč to chtít:</strong><br>Návštěvníci se na webu déle zdrží a působíte jako top hráč na trhu.</p>
                 </div>
               </label>
 
@@ -692,12 +748,11 @@
                   <span>WebGL / 3D prvek</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="2500" data-label="WebGL / 3D prvek">
-                <em>2 500 Kč</em>
+                <input type="checkbox" value="6000" data-label="WebGL / 3D prvek">
+                <em>6 000 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Speciální 3D nebo interaktivní vizuální efekt na webu.</p>
-                  <p><strong>Proč to chtít:</strong><br>Okamžitě tě odliší od konkurence a web působí prémiově.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud je pro tebe prioritou maximální jednoduchost.</p>
+                  <p><strong>Co to je:</strong><br>Interaktivní 3D grafika reagující na vaši myš nebo scrollování.</p>
+                  <p><strong>Proč to chtít:</strong><br>Absolutní "wow efekt", díky kterému ihned rozdrtíte konkurenci.</p>
                 </div>
               </label>
 
@@ -706,26 +761,24 @@
                   <span>SEO optimalizace</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="1200" data-label="SEO optimalizace">
-                <em>1 200 Kč</em>
+                <input type="checkbox" value="2500" data-label="SEO optimalizace">
+                <em>2 500 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Úprava webu tak, aby ho Google lépe našel.</p>
-                  <p><strong>Proč to chtít:</strong><br>Více lidí tě najde bez placených reklam.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud web slouží jen jako vizitka.</p>
+                  <p><strong>Co to je:</strong><br>Úprava on-page struktury a metadat pro vyhledávače.</p>
+                  <p><strong>Proč to chtít:</strong><br>Lidé vás dohledají přirozeně, i bez placených reklam.</p>
                 </div>
               </label>
 
               <label class="check">
                 <div class="check-header">
-                  <span>Copywriting</span>
+                  <span>Prodejní Copywriting</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="900" data-label="Copywriting">
-                <em>900 Kč</em>
+                <input type="checkbox" value="2000" data-label="Copywriting">
+                <em>2 000 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Texty napsané tak, aby návštěvníka dovedly k akci.</p>
-                  <p><strong>Proč to chtít:</strong><br>Vyšší šance, že z návštěvníka bude zákazník.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud už máš kvalitní texty hotové.</p>
+                  <p><strong>Co to je:</strong><br>Revidování a úprava textů specialistou.</p>
+                  <p><strong>Proč to chtít:</strong><br>Správná slova zvyšují konverze a mění čtenáře v platící klienty.</p>
                 </div>
               </label>
 
@@ -734,26 +787,10 @@
                   <span>Kontaktní formulář</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="600" data-label="Kontaktní formulář na web">
-                <em>600 Kč</em>
+                <input type="checkbox" value="1000" data-label="Kontaktní formulář">
+                <em>1 000 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Formulář, přes který tě lidé mohou kontaktovat přímo z webu.</p>
-                  <p><strong>Proč to chtít:</strong><br>Lidé tě osloví častěji než jen přes e‑mail.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud chceš řešit kontakt pouze e‑mailem.</p>
-                </div>
-              </label>
-
-              <label class="check">
-                <div class="check-header">
-                  <span>Napojení odesílání (E‑mail)</span>
-                  <button type="button" class="help-toggle">Co to je?</button>
-                </div>
-                <input type="checkbox" value="300" data-label="Napojení odesílání">
-                <em>300 Kč</em>
-                <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Zajištění, že zprávy z formuláře dorazí na e‑mail.</p>
-                  <p><strong>Proč to chtít:</strong><br>Abys nikdy nepřišel o poptávku.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud formulář nepoužíváš.</p>
+                  <p><strong>Co to je:</strong><br>Bezpečný formulář přímo na stránce.</p>
                 </div>
               </label>
 
@@ -762,26 +799,22 @@
                   <span>Branding – základní</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
-                <input type="checkbox" value="3500" data-label="Branding – základní kit">
-                <em>3 500 Kč</em>
+                <input type="checkbox" value="5000" data-label="Branding – základní kit">
+                <em>5 000 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Základní vizuální styl – barvy, písmo, jednoduché logo.</p>
-                  <p><strong>Proč to chtít:</strong><br>Web působí jednotně a profesionálně.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud už máš jasně daný vizuální styl.</p>
+                  <p><strong>Co to je:</strong><br>Vytvoření nového loga, barevné palety a výběr prémiových fontů.</p>
                 </div>
               </label>
 
               <label class="check">
                 <div class="check-header">
-                  <span>Branding – kompletní</span>
+                  <span>Branding – kompletní (vč. manuálu)</span>
                   <button type="button" class="help-toggle">Co to je?</button>
                 </div>
                 <input type="checkbox" value="12000" data-label="Branding – kompletní">
                 <em>12 000 Kč</em>
                 <div class="help-panel">
-                  <p><strong>Co to je:</strong><br>Kompletní identita značky včetně brand manuálu.</p>
-                  <p><strong>Proč to chtít:</strong><br>Dlouhodobě buduje důvěru a zapamatovatelnost značky.</p>
-                  <p><strong>Kdy ne:</strong><br>Pokud řešíš jen menší jednorázový projekt.</p>
+                  <p><strong>Co to je:</strong><br>Kompletní vizuální identita a podrobný brandbook pro vaši firmu.</p>
                 </div>
               </label>
             </div>
@@ -845,7 +878,7 @@
       <div class="footer-flex">
         <div class="footer-col" style="flex: 2;">
           <div class="logo" style="margin-bottom: 20px;"><span class="logo-text">CREVIA</span></div>
-          <p style="max-width: 320px; color: var(--text-gray);">Digitální studio zaměřené na tvorbu webů a značek, které dávají smysl a generují zisk.</p>
+          <p style="max-width: 320px; color: var(--text-gray);">Digitální studio zaměřené na tvorbu prémiových webů, aplikací a značek, které generují zisk.</p>
         </div>
         <div class="footer-col">
           <h4>Menu</h4>
@@ -1010,7 +1043,7 @@
         const typePrice = Number(typeInput ? typeInput.value : 0);
         
         const pages = Number(pagesSlider.value);
-        const pagesCost = pages * 800;
+        const pagesCost = pages * 1500;
         
         let features = [], featuresCost = 0;
         configForm.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
@@ -1019,10 +1052,10 @@
         });
 
         const total = typePrice + pagesCost + featuresCost;
-        const complexity = Math.min(100, (typePrice/15000 * 40) + (pages/15 * 30) + (features.length/8 * 30));
+        const complexity = Math.min(100, (typePrice/34000 * 40) + (pages/15 * 25) + (features.length/10 * 35));
 
         // UI Update
-        document.getElementById('rangeValue').innerHTML = `<strong>${pages}</strong> podstránek × <strong>800 Kč</strong>`;
+        document.getElementById('rangeValue').innerHTML = `<strong>${pages}</strong> podstránek × <strong>1 500 Kč</strong>`;
         const priceFormatted = total.toLocaleString('cs-CZ') + ' Kč';
         document.getElementById('finalPrice').textContent = priceFormatted;
         document.getElementById('pricePillValue').textContent = priceFormatted;
@@ -1045,9 +1078,9 @@
       configForm.addEventListener('input', updateConfigurator);
       
       const presets = {
-        start: { type: 'One‑page', pages: 3, features: ['Kontaktní formulář na web', 'SEO optimalizace'] },
-        business: { type: 'Firemní web', pages: 6, features: ['Pokročilé animace', 'SEO optimalizace', 'Kontaktní formulář na web'] },
-        premium: { type: 'Komplexní řešení', pages: 10, features: ['Pokročilé animace', 'WebGL / 3D prvek', 'SEO optimalizace', 'Branding – kompletní'] }
+        start: { type: 'One‑page', pages: 3, features: ['Kontaktní formulář', 'SEO optimalizace'] },
+        business: { type: 'Firemní web', pages: 6, features: ['Pokročilé animace', 'SEO optimalizace', 'Kontaktní formulář'] },
+        premium: { type: 'Komplexní web / Aplikace', pages: 10, features: ['Pokročilé animace', 'WebGL / 3D prvek', 'Web App modul', 'Rezervační systém', 'Branding – kompletní'] }
       };
 
       const presetButtons = document.querySelectorAll('.preset');
