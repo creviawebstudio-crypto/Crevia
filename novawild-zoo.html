@@ -1117,29 +1117,55 @@
   ::-webkit-scrollbar-track { background: var(--deep); }
   ::-webkit-scrollbar-thumb { background: var(--moss); border-radius: 3px; }
 
+  /* ── TOUCH DEVICES (CURSOR) ── */
+  @media (pointer: coarse) {
+    #cursor, #cursor-ring { display: none !important; }
+    body { cursor: auto; }
+  }
+
   /* ── MOBILE ── */
   @media (max-width: 1024px) {
     .panels-grid { grid-template-columns: 1fr 1fr; }
     .panel-card:nth-child(2) { border-right: none; }
     .animals-grid { grid-template-columns: 1fr 1fr; }
     .animal-card.wide { grid-column: span 2; }
-    .map-inner, .booking-inner, .cons-inner { grid-template-columns: 1fr; }
+    .map-inner, .booking-inner, .cons-inner { grid-template-columns: 1fr; gap: 48px; }
     .footer-grid { grid-template-columns: 1fr 1fr; }
     .hero-stats { display: none; }
+    #info-panels, #map-section, #animals, #booking, #experiences, #conservation, #reviews, footer { padding-left: 40px; padding-right: 40px; }
   }
+
   @media (max-width: 768px) {
     nav { padding: 16px 24px; }
     nav.scrolled { padding: 12px 24px; }
     .nav-links { display: none; }
-    .hero-content { padding: 0 32px; }
-    #info-panels, #map-section, #animals, #booking, #experiences, #conservation, #reviews, footer { padding-left: 24px; padding-right: 24px; }
-    .panels-grid { grid-template-columns: 1fr 1fr; }
+    .hero-content { padding: 0 24px; }
+    .hero-h1 { font-size: clamp(36px, 10vw, 52px); }
+    #info-panels, #map-section, #animals, #booking, #experiences, #conservation, #reviews, footer { padding: 60px 24px; }
+    #info-panels { padding-top: 0; padding-bottom: 0; }
+    .panels-grid { grid-template-columns: 1fr; }
+    .panel-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 24px 0; }
+    .panel-card:last-child { border-bottom: none; }
     .animals-grid { grid-template-columns: 1fr; }
-    .animal-card.wide { aspect-ratio: 3/2; }
-    .footer-grid { grid-template-columns: 1fr; }
+    .animal-card.wide { grid-column: span 1; aspect-ratio: 4/3; }
+    .ticket-options { grid-template-columns: 1fr; }
+    .booking-body { padding: 24px 20px; }
+    .progress-step { padding: 12px 8px; font-size: 10px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
     .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
     .form-row { grid-template-columns: 1fr; }
+    .cons-stats { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .review-card { flex: 0 0 280px; padding: 24px; }
+    .theme-toggle { bottom: 20px; right: 20px; width: 44px; height: 44px; font-size: 16px; }
+  }
+
+  @media (max-width: 480px) {
     .cons-stats { grid-template-columns: 1fr; }
+    .hero-ctas { flex-direction: column; align-items: stretch; }
+    .btn-primary, .btn-secondary { justify-content: center; }
+    .btn-ghost { padding-top: 8px; }
+    .review-card { flex: 0 0 250px; }
+    .booking-inner > div:first-child > div[style*="display:flex"] { flex-direction: column; align-items: flex-start !important; }
   }
 </style>
 </head>
